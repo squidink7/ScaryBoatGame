@@ -1,0 +1,126 @@
+[gd_scene load_steps=12 format=3 uid="uid://y3vredrepnir"]
+
+[ext_resource type="Shader" path="res://Maps/Demo/sky.gdshader" id="1_sopky"]
+[ext_resource type="PackedScene" uid="uid://bs14q8vttdjft" path="res://Objects/Player/Player.tscn" id="1_w7xtm"]
+[ext_resource type="PackedScene" uid="uid://b4hkamv5j2afl" path="res://Objects/Rain/Rain.tscn" id="1_wilmi"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1uvvg"]
+shader = ExtResource("1_sopky")
+shader_parameter/day_top_color = Color(0.1, 0.6, 1, 1)
+shader_parameter/day_bottom_color = Color(0.4, 0.8, 1, 1)
+shader_parameter/sunset_top_color = Color(0.7, 0.75, 1, 1)
+shader_parameter/sunset_bottom_color = Color(1, 0.5, 0.7, 1)
+shader_parameter/night_top_color = Color(0.02, 0, 0.04, 1)
+shader_parameter/night_bottom_color = Color(0.1, 0, 0.2, 1)
+shader_parameter/horizon_color = Color(0, 0.7, 0.8, 1)
+shader_parameter/horizon_blur = 0.05
+shader_parameter/sun_color = Color(10, 8, 1, 1)
+shader_parameter/sun_sunset_color = Color(10, 0, 0, 1)
+shader_parameter/sun_size = 0.2
+shader_parameter/sun_blur = 10.0
+shader_parameter/moon_color = Color(1, 0.95, 0.7, 1)
+shader_parameter/moon_size = 0.06
+shader_parameter/moon_blur = 0.1
+shader_parameter/clouds_edge_color = Color(0.8, 0.8, 0.98, 1)
+shader_parameter/clouds_top_color = Color(1, 1, 1, 1)
+shader_parameter/clouds_middle_color = Color(0.92, 0.92, 0.98, 1)
+shader_parameter/clouds_bottom_color = Color(0.83, 0.83, 0.94, 1)
+shader_parameter/clouds_speed = 2.0
+shader_parameter/clouds_direction = 0.2
+shader_parameter/clouds_scale = 1.0
+shader_parameter/clouds_cutoff = 0.3
+shader_parameter/clouds_fuzziness = 0.5
+shader_parameter/clouds_weight = 0.0
+shader_parameter/clouds_blur = 0.25
+shader_parameter/stars_speed = 1.0
+shader_parameter/overwritten_time = 0.0
+
+[sub_resource type="Sky" id="Sky_4ls8e"]
+sky_material = SubResource("ShaderMaterial_1uvvg")
+
+[sub_resource type="Environment" id="Environment_6iynd"]
+background_mode = 2
+sky = SubResource("Sky_4ls8e")
+tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(0.137255, 0.14902, 0.207843, 1)
+fog_sun_scatter = 0.2
+fog_density = 0.05
+fog_sky_affect = 0.8
+volumetric_fog_density = 0.1
+volumetric_fog_albedo = Color(0.219608, 0.25098, 0.505882, 1)
+volumetric_fog_emission = Color(0.0980392, 0.117647, 0.176471, 1)
+volumetric_fog_sky_affect = 0.5
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cyoj8"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_isi34"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vlehm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ndv1i"]
+albedo_color = Color(1, 0.00784314, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1c8k1"]
+
+[node name="Demo" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.433016, 0.899517, 0.0580153, 0.866023, 0.433016, -0.250001, -0.250002, -0.0580118, -0.966506, 0, 0, 0)
+light_color = Color(0.905882, 0.65098, 0.490196, 1)
+light_energy = 0.5
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6iynd")
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_cyoj8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+mesh = SubResource("BoxMesh_isi34")
+
+[node name="Player" parent="." node_paths=PackedStringArray("Camera", "GroundRayCast") instance=ExtResource("1_w7xtm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+Camera = NodePath("Head/Camera")
+GroundRayCast = NodePath("GroundRaycast")
+
+[node name="Rain" parent="Player" instance=ExtResource("1_wilmi")]
+
+[node name="Box" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, -5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box"]
+mesh = SubResource("BoxMesh_vlehm")
+surface_material_override/0 = SubResource("StandardMaterial3D_ndv1i")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box"]
+shape = SubResource("BoxShape3D_1c8k1")
+
+[node name="Box2" type="StaticBody3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 4, 1, -4)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box2"]
+mesh = SubResource("BoxMesh_vlehm")
+surface_material_override/0 = SubResource("StandardMaterial3D_ndv1i")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box2"]
+shape = SubResource("BoxShape3D_1c8k1")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -6)
+light_color = Color(1, 0.513726, 0.556863, 1)
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, -3)
+light_color = Color(0.286275, 0.34902, 1, 1)
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 2, -8)
+light_color = Color(0.490196, 1, 0.647059, 1)

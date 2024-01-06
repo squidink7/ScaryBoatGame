@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://bs14q8vttdjft"]
+
+[ext_resource type="Script" path="res://Objects/Player/Player.cs" id="1_nas8o"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_16iy0"]
+friction = 0.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vjmea"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_j41yy"]
+radius = 0.45
+
+[node name="Player" type="RigidBody3D" node_paths=PackedStringArray("Camera", "GroundRayCast")]
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 10.0
+physics_material_override = SubResource("PhysicsMaterial_16iy0")
+script = ExtResource("1_nas8o")
+Camera = NodePath("Head/Camera")
+GroundRayCast = NodePath("GroundRaycast")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="Camera" type="Camera3D" parent="Head"]
+current = true
+
+[node name="Collider" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_vjmea")
+
+[node name="GroundRaycast" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.6, 0)
+shape = SubResource("SphereShape3D_j41yy")
+target_position = Vector3(0, -0.1, 0)

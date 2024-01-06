@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://rmgyxp0gjtr5"]
+
+[node name="PlayerSpawn" type="Node3D"]
